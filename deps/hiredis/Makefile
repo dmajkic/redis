@@ -5,8 +5,12 @@
 OBJ = net.o hiredis.o sds.o async.o
 BINS = hiredis-example hiredis-test
 
-uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
-osname := $(shell uname -rs | cut -f 1-2 -d "." | cut -f 1 -d "-")
+ifndef uname_S
+    uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+endif
+ifndef osname
+    osname := $(shell uname -rs | cut -f 1-2 -d "." | cut -f 1 -d "-")
+endif
 OPTIMIZATION?=-O3
 ifeq ($(uname_S),SunOS)
   CFLAGS?=-std=c99 -pedantic $(OPTIMIZATION) -fPIC -Wall -W -D__EXTENSIONS__ -D_XPG6 $(ARCH) $(PROF)
@@ -15,7 +19,7 @@ ifeq ($(uname_S),SunOS)
   DYLIBNAME?=libhiredis.so
   DYLIB_MAKE_CMD?=$(CC) -G -o ${DYLIBNAME} ${OBJ}
   STLIBNAME?=libhiredis.a
-  STLIB_MAKE_CMD?=ar rcs ${STLIBNAME} ${OBJ}
+  STLIB_MAKE_CMD?=$(AR) rcs ${STLIBNAME} ${OBJ}
 else
 ifeq ($(uname_S),Darwin)
   CFLAGS?=-std=c99 -pedantic $(OPTIMIZATION) -fPIC -Wall -W -Wstrict-prototypes -Wwrite-strings $(ARCH) $(PROF)
@@ -32,18 +36,17 @@ else ifeq ($(osname),MINGW32_NT)
   LIBS?= -lws2_32
   LDFLAGS?=-L.
   DYLIBNAME?=hiredis.dll
-  DYLIB_MAKE_CMD?=gcc -shared -Wl,-soname,${DYLIBNAME} -o ${DYLIBNAME} ${OBJ} ${LIBS}
+  DYLIB_MAKE_CMD?=$(CC) -shared -Wl,-soname,${DYLIBNAME} -o ${DYLIBNAME} ${OBJ} ${LIBS}
   STLIBNAME?=libhiredis.a
-  STLIB_MAKE_CMD?=ar rcs ${STLIBNAME} ${OBJ}
-  CC=gcc
+  STLIB_MAKE_CMD?=$(AR) rcs ${STLIBNAME} ${OBJ}
 else
   CFLAGS?=-std=c99 -pedantic $(OPTIMIZATION) -fPIC -Wall -W -Wstrict-prototypes -Wwrite-strings $(ARCH) $(PROF)
   CCLINK?=-lm -pthread
   LDFLAGS?=-L. -Wl,-rpath,.
   DYLIBNAME?=libhiredis.so
-  DYLIB_MAKE_CMD?=gcc -shared -Wl,-soname,${DYLIBNAME} -o ${DYLIBNAME} ${OBJ}
+  DYLIB_MAKE_CMD?=$(CC) -shared -Wl,-soname,${DYLIBNAME} -o ${DYLIBNAME} ${OBJ}
   STLIBNAME?=libhiredis.a
-  STLIB_MAKE_CMD?=ar rcs ${STLIBNAME} ${OBJ}
+  STLIB_MAKE_CMD?=$(AR) rcs ${STLIBNAME} ${OBJ}
 endif
 endif
 
