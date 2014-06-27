@@ -1,3 +1,37 @@
+About this fork
+---------------
+
+This fork lets you run Redis Server as a Windows service.
+
+It introduces the redis-service.exe binary; this is a Windows service that
+simply starts and stops the redis-server.exe binary.
+
+It expects to find redis-server.exe and conf\redis.conf files in the same
+directory as redis-service.exe.
+
+This fork also introduces a Windows installer; this will:
+
+  * install redis into Program Files.
+  * configure redis to store its database dumps inside the "data"
+    subdirectory, and logs inside "logs" subdirectory.
+  * create the RedisService Windows account (with Logon as service
+    privilege)
+  * install a Windows Service to automatically start Redis Server (run
+    as the RedisService account) at boot (but has to be manually
+    started after install...).
+  * the installer will not override existing redis.conf file (it does
+    install a redis-dist.conf with the default settings).
+  * create a bunch of Start Menu entries (for redis-cli.exe, redis home
+    page, etc).
+
+NB This is a work in progress. See the planned features inside the 
+   src/service.c and setup/redis.iss files.
+
+Let me known how this works for you!
+
+  -- Rui Lopes
+
+
 Windows 32 and x64 port of Redis server, client and utils
 --------------------------------------------
 

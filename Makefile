@@ -12,9 +12,13 @@ clean:
 	cd src && $(MAKE) $@
 	cd deps/hiredis && $(MAKE) $@
 	cd deps/linenoise && $(MAKE) $@
+	cd setup && $(MAKE) $@
 
 $(TARGETS):
 	cd src && $(MAKE) $@
+
+setup: all
+	cd setup && $(MAKE) $@
 
 src/help.h:
 	@./utils/generate-command-help.rb > $@

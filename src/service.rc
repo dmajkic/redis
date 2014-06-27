@@ -1,0 +1,39 @@
+#include <winver.h>
+#include "version.h"
+#include "release.h"
+
+#define REDIS_FILE_VERSION_STR  REDIS_VERSION "-" REDIS_GIT_SHA1
+
+#ifdef DEBUG
+#define REDIS_FILE_FLAG_DEBUG VS_FF_DEBUG
+#else
+#define REDIS_FILE_FLAG_DEBUG 0
+#endif
+
+1 ICON "../setup/redis.ico"
+
+VS_VERSION_INFO VERSIONINFO
+    FILEVERSION     REDIS_FILE_VERSION
+    PRODUCTVERSION  REDIS_FILE_VERSION
+    FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+    FILEFLAGS       (VS_FF_PRERELEASE | REDIS_FILE_FLAG_DEBUG)
+    FILEOS          VOS_NT_WINDOWS32
+    FILETYPE        VFT_APP
+    FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "FileDescription",  "Redis Server Windows service"
+            VALUE "FileVersion",      REDIS_FILE_VERSION_STR 
+            VALUE "LegalCopyright",   "See http://redis.io/"
+            VALUE "ProductName",      "Redis"
+            VALUE "ProductVersion",   REDIS_FILE_VERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
